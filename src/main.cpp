@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include "controller.h"
 #include "game.h"
@@ -27,7 +28,18 @@ int main() {
   game.SetPlayerName(player_name);
   game.Run(controller, renderer, kMsPerFrame);
   std::cout << "Game has terminated successfully!\n";
+  std::cout << "Player Name: " << game.GetPlayerName() << "\n";
   std::cout << "Score: " << game.GetScore() << "\n";
   std::cout << "Size: " << game.GetSize() << "\n";
+
+  // Save game results to file
+  if (std::ofstream outFile{"game_history.txt", std::ios_base::app}; outFile.is_open()) {
+    outFile << "Player Name: " << game.GetPlayerName() << "\n";
+    outFile << "Score: " << game.GetScore() << "\n";
+    outFile << "Size: " << game.GetSize() << "\n";
+    outFile << "----------------------------------------\n";  // Separator between sessions
+    outFile.close();
+    std::cout << "Game history successfully logged in build/game_history.txt\n";
+  }  
   return 0;
 }

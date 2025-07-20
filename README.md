@@ -34,15 +34,17 @@ In this project, you can build your own C++ application or extend this Snake gam
 * Game ends when snake collides with the wall
   * Added in snake.cpp line 46-48
 * Players can set their names in console 
-  * Added in main.cpp line 7-12, 
 * Game window title displays player name, alongwith score, and FPS
+* Game history is logged in `build/game_history.txt` after each game session
 
 ## Project Rubric Points
 ### Loops, Functions, I/O - meet at least 2 criteria
   * The project demonstrates an understanding of C++ functions and control structures.
-    * Implemented in `main.cpp line 7-12`; `game.cpp line 5-9`
+    * Implemented in `main.cpp line 8-12`; `game.cpp line 5-9`
   * The project accepts user input and processes the input.
-    * Implemented in `main.cpp line 7-12, 22,27`; `game.cpp line 5-9, 45`; `renderer.cpp line 79`
+    * Implemented in `main.cpp line 8-12, 23,28`; `game.cpp line 5-9`; `renderer.cpp line 79`
+  * The project reads data from a file and process the data, or the program writes data to a file.
+    * Implemented in `main.cpp line 36-43`;
 
 ## CC Attribution-ShareAlike 4.0 International
 

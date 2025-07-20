@@ -8,6 +8,10 @@ void Game::SetPlayerName(const std::string& name) {
     }
 }
 
+std::string Game::GetPlayerName() const {
+    return player_name;
+}
+
 Game::Game(std::size_t grid_width, std::size_t grid_height)
     : snake(grid_width, grid_height),
       engine(dev()),
