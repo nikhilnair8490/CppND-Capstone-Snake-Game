@@ -39,12 +39,31 @@ In this project, you can build your own C++ application or extend this Snake gam
 
 ## Project Rubric Points
 ### Loops, Functions, I/O - meet at least 2 criteria
-  * The project demonstrates an understanding of C++ functions and control structures.
-    * Implemented in `main.cpp line 8-12`; `game.cpp line 5-9`
   * The project accepts user input and processes the input.
-    * Implemented in `main.cpp line 8-12, 23,28`; `game.cpp line 5-9`; `renderer.cpp line 79`
-  * The project reads data from a file and process the data, or the program writes data to a file.
-    * Implemented in `main.cpp line 36-43`;
+    * Implemented in `main.cpp lines 8-13` - GetPlayerName function for player name input
+  * The project reads data from a file and process the data, and the program writes data to a file.
+    * Implemented in `file_game_history.h lines 12-34` - File operations for game history
+
+### Object Oriented Programming - meet at least 3 criteria
+  * Classes are organized with attributes to hold data and methods to perform tasks.
+    * Implemented in `game_history.h lines 8-23` - Abstract base class with pure virtual methods
+    * Implemented in `file_game_history.h lines 8-34` - Concrete class with file handling implementation
+
+  * Classes follow an appropriate inheritance hierarchy with virtual and override functions.
+    * Base class: `game_history.h lines 8-23` - GameHistory abstract class with virtual methods
+    * Derived class: `file_game_history.h lines 8-34` - FileGameHistory implementing base class interface
+    * Virtual functions: `game_history.h lines 12-13` - Pure virtual functions for save and display
+    * Override implementation: `file_game_history.h lines 15-31` - Override of virtual functions
+
+  * Classes abstract implementation details from their interfaces.
+    * Interface definition: `game_history.h lines 12-13` - Pure virtual interface methods
+    * Implementation hiding: `file_game_history.h lines 32-33` - Private member variable
+    * Implementation details: `file_game_history.h lines 15-31` - Concrete implementation hidden from users
+
+  * Member data that is subject to an invariant is hidden from the user and accessed via member methods.
+    * Protected method: `game_history.h lines 16-22` - Protected formatGameResult method
+    * Private data: `file_game_history.h line 33` - Private filename_ member
+    * Public interface: `file_game_history.h lines 15-31` - Public methods for data access
 
 ## CC Attribution-ShareAlike 4.0 International
 
