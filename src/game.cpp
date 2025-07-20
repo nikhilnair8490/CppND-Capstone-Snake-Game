@@ -2,6 +2,12 @@
 #include <iostream>
 #include "SDL.h"
 
+void Game::SetPlayerName(const std::string& name) {
+    if (!name.empty()) {
+        player_name = name;
+    }
+}
+
 Game::Game(std::size_t grid_width, std::size_t grid_height)
     : snake(grid_width, grid_height),
       engine(dev()),
@@ -36,7 +42,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 
     // After every second, update the window title.
     if (frame_end - title_timestamp >= 1000) {
-      renderer.UpdateWindowTitle(score, frame_count);
+      renderer.UpdateWindowTitle(score, frame_count, player_name);
       frame_count = 0;
       title_timestamp = frame_end;
     }
