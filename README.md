@@ -30,6 +30,9 @@ In this project, you can build your own C++ application or extend this Snake gam
 3. Compile: `cmake .. && make`
 4. Run it: `./SnakeGame`.
 
+## New Features
+* Game ends when snake collides with the wall
+  * Added in snake.cpp line 46-48
 
 ## CC Attribution-ShareAlike 4.0 International
 

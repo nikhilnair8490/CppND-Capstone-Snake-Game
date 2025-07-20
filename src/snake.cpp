@@ -39,8 +39,13 @@ void Snake::UpdateHead() {
   }
 
   // Wrap the Snake around to the beginning if going off of the screen.
-  head_x = fmod(head_x + grid_width, grid_width);
-  head_y = fmod(head_y + grid_height, grid_height);
+  // head_x = fmod(head_x + grid_width, grid_width);
+  // head_y = fmod(head_y + grid_height, grid_height);
+
+    // Check if the snake hits the wall
+  if (head_x < 0 || head_x >= grid_width || head_y < 0 || head_y >= grid_height) {
+    alive = false; // Snake dies if it hits the wall
+  }
 }
 
 void Snake::UpdateBody(SDL_Point &current_head_cell, SDL_Point &prev_head_cell) {
