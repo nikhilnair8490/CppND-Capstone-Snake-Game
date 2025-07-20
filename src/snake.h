@@ -14,6 +14,62 @@ class Snake {
         head_x(grid_width / 2),
         head_y(grid_height / 2) {}
 
+  // Copy constructor
+  Snake(const Snake& other)
+      : grid_width(other.grid_width),
+        grid_height(other.grid_height),
+        head_x(other.head_x),
+        head_y(other.head_y),
+        body(other.body),
+        direction(other.direction),
+        speed(other.speed),
+        size(other.size),
+        alive(other.alive) {}
+
+  // Copy assignment operator
+  Snake& operator=(const Snake& other) {
+    if (this != &other) {
+      grid_width = other.grid_width;
+      grid_height = other.grid_height;
+      head_x = other.head_x;
+      head_y = other.head_y;
+      body = other.body;
+      direction = other.direction;
+      speed = other.speed;
+      size = other.size;
+      alive = other.alive;
+    }
+    return *this;
+  }
+        
+  // Move constructor
+  Snake(Snake&& other) noexcept
+      : grid_width(other.grid_width),
+        grid_height(other.grid_height),
+        head_x(other.head_x),
+        head_y(other.head_y),
+        body(std::move(other.body)),
+        direction(other.direction),
+        speed(other.speed),
+        size(other.size),
+        alive(other.alive) {}
+
+  // Move assignment operator
+  Snake& operator=(Snake&& other) noexcept {
+    if (this != &other) {
+      grid_width = other.grid_width;
+      grid_height = other.grid_height;
+      head_x = other.head_x;
+      head_y = other.head_y;
+      body = std::move(other.body);
+      direction = other.direction;
+      speed = other.speed;
+      size = other.size;
+      alive = other.alive;
+    }
+    return *this;
+  }
+
   void Update();
 
   void GrowBody();

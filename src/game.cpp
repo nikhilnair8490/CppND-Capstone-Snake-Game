@@ -58,6 +58,9 @@ void Game::Run(Controller const &controller, Renderer &renderer,
       SDL_Delay(target_frame_duration - frame_duration);
     }
   }
+  
+  // Save final score
+  score_tracker.AddScore(player_name, score, snake.size);
 }
 
 void Game::PlaceFood() {
@@ -95,3 +98,11 @@ void Game::Update() {
 
 int Game::GetScore() const { return score; }
 int Game::GetSize() const { return snake.size; }
+
+GameScore::ScoreEntry Game::GetHighScore() const {
+    return score_tracker.GetHighestScore();
+}
+
+const GameScore& Game::GetScoreTracker() const {
+    return score_tracker;
+}

@@ -65,6 +65,39 @@ In this project, you can build your own C++ application or extend this Snake gam
     * Private data: `file_game_history.h line 33` - Private filename_ member
     * Public interface: `file_game_history.h lines 15-31` - Public methods for data access
 
+### Memory Management - meet at least 3 criteria
+
+1. **At least two variables are defined as references, or two functions use pass-by-reference**
+   * Game class uses pass-by-reference in function declarations:
+     * `void Run(Controller const &controller, Renderer &renderer, ...)` in `game.h line 17-18`
+     * `void SetPlayerName(const std::string& name)` in `game.h line 15`
+     * `const GameScore& GetScoreTracker() const` in `game.h line 22`
+
+2. **For all classes, if any one of the copy constructor, copy assignment operator, move constructor, move assignment operator, and destructor are defined, then all of these functions are defined**
+   * Snake class implements all five special member functions:
+     * Copy constructor: `Snake(const Snake& other)` in `snake.h lines 19-27`
+     * Copy assignment: `Snake& operator=(const Snake& other)` in `snake.h lines 32-43`
+     * Move constructor: `Snake(Snake&& other) noexcept` in `snake.h lines 47-55`
+     * Move assignment: `Snake& operator=(Snake&& other) noexcept` in `snake.h lines 59-71`
+     * Default destructor (no manual resource management needed)
+
+3. **The project follows RAII pattern by allocating objects at compile-time, initializing objects when declared, and utilizing scope for automatic destruction**
+   * GameScore class follows RAII:
+     * Score vector initialized at declaration: `std::vector<ScoreEntry> scores_;` in `game_score.h line 50`
+     * ScoreEntry struct with proper member initialization in `game_score.h lines 11-15`
+   * Snake class follows RAII:
+     * All member variables initialized in constructor list: `snake.h lines 11-15`
+     * Vector automatically managed through scope: `std::vector<SDL_Point> body;` in `snake.h line 86`
+
+4. **The project relies on move semantics, instead of copying the object**
+   * Snake class implements move semantics for body vector:
+     * Move constructor: `body(std::move(other.body))` in `snake.h line 51`
+     * Move assignment: `body = std::move(other.body)` in `snake.h line 64`
+   * GameScore class uses move semantics:
+     * Move constructor: `scores_(std::move(other.scores_))` in `game_score.h line 39`
+     * Move assignment: `scores_ = std::move(other.scores_)` in `game_score.h line 44`
+     * AddScore method uses move: `scores_.emplace_back(ScoreEntry{std::move(player_name), ...})` in `game_score.h line 22`
+
 ## CC Attribution-ShareAlike 4.0 International
 
 

@@ -7,6 +7,7 @@
 #include "controller.h"
 #include "renderer.h"
 #include "snake.h"
+#include "game_score.h"
 
 class Game {
  public:
@@ -17,6 +18,8 @@ class Game {
            std::size_t target_frame_duration);
   int GetScore() const;
   int GetSize() const;
+  GameScore::ScoreEntry GetHighScore() const;
+  const GameScore& GetScoreTracker() const;
 
  private:
   Snake snake;
@@ -29,6 +32,7 @@ class Game {
 
   int score{0};
   std::string player_name{"Player 1"};
+  GameScore score_tracker;
 
   void PlaceFood();
   void Update();
