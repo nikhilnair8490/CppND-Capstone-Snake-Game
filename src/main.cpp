@@ -1,9 +1,9 @@
 #include <iostream>
 #include <string>
+#include <fstream>
 #include "controller.h"
 #include "game.h"
 #include "renderer.h"
-#include "file_game_history.h"
 
 std::string GetPlayerName() {
     std::string input;
@@ -27,11 +27,11 @@ int main() {
   Game game(kGridWidth, kGridHeight);
   game.SetPlayerName(player_name);
   game.Run(controller, renderer, kMsPerFrame);
-  std::cout << "Game has terminated successfully!\n";
-  
-  // Create file history handler and save results
-  FileGameHistory history("game_history.txt");
-  history.saveGame(game.GetPlayerName(), game.GetScore(), game.GetSize());
-  history.displayResults();
+  std::cout << "Game has terminated successfully!\n\n";
+  std::cout << "Game History:\n";
+  std::ifstream history_file("game_history.txt");
+  if (history_file) {
+    std::cout << history_file.rdbuf();
+  }
   return 0;
 }

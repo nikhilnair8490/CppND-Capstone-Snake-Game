@@ -5,6 +5,7 @@
 void Game::SetPlayerName(const std::string& name) {
     if (!name.empty()) {
         player_name = name;
+        game_stats.SetCurrentPlayer(name);
     }
 }
 
@@ -59,8 +60,8 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     }
   }
   
-  // Save final score
-  score_tracker.AddScore(player_name, score, snake.size);
+  // Only save score in game_stats to avoid duplication
+  game_stats.UpdateStats(score, snake.size, true);
 }
 
 void Game::PlaceFood() {
@@ -80,6 +81,8 @@ void Game::PlaceFood() {
 
 void Game::Update() {
   if (!snake.alive) return;
+  
+  game_stats.UpdateStats(score, snake.size);
 
   snake.Update();
 

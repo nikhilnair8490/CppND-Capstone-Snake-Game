@@ -36,6 +36,7 @@ In this project, you can build your own C++ application or extend this Snake gam
 * Players can set their names in console 
 * Game window title displays player name, alongwith score, and FPS
 * Game history is logged in `build/game_history.txt` after each game session
+* Real time game stats are displayed on the console with highest score tracking
 
 ## Project Rubric Points
 ### Loops, Functions, I/O - meet at least 2 criteria
@@ -97,6 +98,23 @@ In this project, you can build your own C++ application or extend this Snake gam
      * Move constructor: `scores_(std::move(other.scores_))` in `game_score.h line 39`
      * Move assignment: `scores_ = std::move(other.scores_)` in `game_score.h line 44`
      * AddScore method uses move: `scores_.emplace_back(ScoreEntry{std::move(player_name), ...})` in `game_score.h line 22`
+
+### Concurrency - meet at least 2 criteria
+
+1. **The project uses multiple threads or async tasks in the execution**
+   * GameStats class implements a separate display thread:
+     * Thread creation in constructor: `stats_thread_ = std::thread(&GameStats::DisplayStats, this)` in `game_stats.h line 16`
+     * Thread execution in `DisplayStats()` method in `game_stats.h lines 123-134`
+     * Thread cleanup in destructor: `stats_thread_.join()` in `game_stats.h lines 21-25`
+
+2. **A mutex or lock is used to protect shared data across multiple threads**
+   * GameStats class uses std::scoped_lock in multiple methods:
+     * `UpdateStats()` protects score updates: `std::scoped_lock lock(stats_mutex_)` in `game_stats.h lines 27-32`
+     * `SetCurrentPlayer()` protects player name updates: `std::scoped_lock lock(stats_mutex_)` in `game_stats.h lines 39-41`
+     * `DisplayStats()` protects stat display: `std::scoped_lock lock(stats_mutex_)` in `game_stats.h line 126`
+   * Protected shared members include:
+     * `current_score_`, `current_size_`, `current_player_`, `highest_score_`, `highest_score_player_`
+     * All access to these members is protected by `stats_mutex_`
 
 ## CC Attribution-ShareAlike 4.0 International
 

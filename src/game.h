@@ -8,6 +8,7 @@
 #include "renderer.h"
 #include "snake.h"
 #include "game_score.h"
+#include "game_stats.h"
 
 class Game {
  public:
@@ -33,6 +34,7 @@ class Game {
   int score{0};
   std::string player_name{"Player 1"};
   GameScore score_tracker;
+  GameStats game_stats;
 
   void PlaceFood();
   void Update();
