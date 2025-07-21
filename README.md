@@ -101,15 +101,15 @@ In this project, I have extended this Snake game, following the principles I hav
 
 1. **The project uses multiple threads or async tasks in the execution**
    * GameStats class implements a separate display thread:
-     * Thread creation in constructor: `stats_thread_ = std::thread(&GameStats::DisplayStats, this)` in `game_stats.h line 16`
-     * Thread execution in `DisplayStats()` method in `game_stats.h lines 123-134`
+     * Thread creation in constructor: `stats_thread_ = std::thread(&GameStats::DisplayStats, this)` in `game_stats.h line 17`
+     * Thread execution in `DisplayStats()` method in `game_stats.h lines 104`
      * Thread cleanup in destructor: `stats_thread_.join()` in `game_stats.h lines 21-25`
 
 2. **A mutex or lock is used to protect shared data across multiple threads**
    * GameStats class uses std::scoped_lock in multiple methods:
-     * `UpdateStats()` protects score updates: `std::scoped_lock lock(stats_mutex_)` in `game_stats.h lines 27-32`
-     * `SetCurrentPlayer()` protects player name updates: `std::scoped_lock lock(stats_mutex_)` in `game_stats.h lines 39-41`
-     * `DisplayStats()` protects stat display: `std::scoped_lock lock(stats_mutex_)` in `game_stats.h line 126`
+     * `UpdateStats()` protects score updates: `std::lock_guard<std::mutex> lock(stats_mutex_)` in `game_stats.h lines 27-32`
+     * `SetCurrentPlayer()` protects player name updates: `std::lock_guard<std::mutex> lock(stats_mutex_)` in `game_stats.h lines 39-41`
+     * `DisplayStats()` protects stat display: `std::lock_guard<std::mutex> lock(stats_mutex_)` in `game_stats.h line 107`
    * Protected shared members include:
      * `current_score_`, `current_size_`, `current_player_`, `highest_score_`, `highest_score_player_`
      * All access to these members is protected by `stats_mutex_`
