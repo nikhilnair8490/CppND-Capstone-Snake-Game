@@ -5,7 +5,6 @@
 #include <thread>
 #include <atomic>
 #include <string>
-#include <string_view>
 #include <iostream>
 #include <fstream>
 #include <chrono>
@@ -26,7 +25,7 @@ public:
     }
 
     void UpdateStats(int score, int size, bool gameOver = false) {
-        std::scoped_lock lock(stats_mutex_);
+        std::lock_guard<std::mutex> lock(stats_mutex_);
         current_score_ = score;
         current_size_ = size;
         UpdateHighScore(score);
@@ -36,9 +35,9 @@ public:
         }
     }
 
-    void SetCurrentPlayer(std::string_view name) {
-        std::scoped_lock lock(stats_mutex_);
-        current_player_ = std::string(name);
+    void SetCurrentPlayer(const std::string& name) {
+        std::lock_guard<std::mutex> lock(stats_mutex_);
+        current_player_ = name;
     }
 
 private:
@@ -51,33 +50,32 @@ private:
             }
 
             std::string line;
-            std::string current_player;
-            int current_score = 0;
-            int entries_found = 0;
+            std::string temp_player;
+            int temp_score = 0;
+            bool in_entry = false;
 
             while (std::getline(history_file, line)) {
                 if (line.find("Player Name: ") == 0) {
-                    current_player = line.substr(12);
-                } else if (line.find("Score: ") == 0) {
+                    temp_player = line.substr(12);
+                    in_entry = true;
+                }
+                else if (line.find("Score: ") == 0 && in_entry) {
                     try {
-                        current_score = std::stoi(line.substr(7));
-                        if (current_score > highest_score_) {
-                            highest_score_ = current_score;
-                            highest_score_player_ = current_player;
+                        temp_score = std::stoi(line.substr(7));
+                        if (temp_score > highest_score_) {
+                            highest_score_ = temp_score;
+                            highest_score_player_ = temp_player;
                         }
-                        entries_found++;
-                    } catch (const std::invalid_argument& e) {
-                        std::cerr << "Warning: Invalid score format in history\n";
+                    } catch (const std::invalid_argument&) {
+                        std::cerr << "Invalid score format in history\n";
                     }
+                    in_entry = false;
                 }
             }
 
-            if (entries_found > 0) {
-                std::cout << "Loaded " << entries_found << " previous games.\n";
-                std::cout << "Current high score: " << highest_score_ 
+            if (highest_score_ > 0) {
+                std::cout << "Loaded previous high score: " << highest_score_ 
                          << " by " << highest_score_player_ << "\n";
-            } else {
-                std::cout << "No valid scores found. Starting fresh!\n";
             }
 
         } catch (const std::ios_base::failure& e) {
@@ -86,24 +84,7 @@ private:
         }
     }
 
-    void ProcessHistoryLine(std::string_view line) {
-        static std::string currentPlayer;
-        static int currentScore = 0;
-        
-        if (line.find("Player Name: ") == 0) {
-            currentPlayer = std::string(line.substr(12));
-        } else if (line.find("Score: ") == 0) {
-            try {
-                currentScore = std::stoi(std::string(line.substr(7)));
-                UpdateHighScore(currentScore, currentPlayer);
-            } catch (const std::invalid_argument& e) {
-                std::cerr << "Invalid score format in history: " << e.what() << "\n";
-            }
-        }
-    }
-
-    void SaveGameResult(int score, std::string_view player) const {
-        // Always append to maintain history across sessions
+    void SaveGameResult(int score, const std::string& player) const {
         std::ofstream file("game_history.txt", std::ios::app);
         if (file) {
             file << "Player Name: " << player << "\n"
@@ -123,7 +104,7 @@ private:
     void DisplayStats() {
         while (running_) {
             {
-                std::scoped_lock lock(stats_mutex_);
+                std::lock_guard<std::mutex> lock(stats_mutex_);
                 std::cout << "\033[2J\033[H";  // Clear screen and move cursor to top
                 std::cout << "Current Player: " << current_player_ << "\n"
                          << "Current Score: " << current_score_ << "\n"
